@@ -1,0 +1,8 @@
+﻿Add-Migration -Context ApplicationDbContext -OutputDir Data\Migrations Initio
+Update-Database -Context ApplicationDbContext
+-------------------------------------------------------------------------------
+Add-Migration -Context MedikalSenterContext -o Data\MSMigrations Initio
+Update-Database -Context MedikalSenterContext
+
+Add to Migration for Triggers
+ExtraMigration.Steps(migrationBuilder);
