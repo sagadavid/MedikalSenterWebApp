@@ -34,7 +34,6 @@ namespace MedikalSenter.Data.MSMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -74,7 +73,6 @@ namespace MedikalSenter.Data.MSMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 

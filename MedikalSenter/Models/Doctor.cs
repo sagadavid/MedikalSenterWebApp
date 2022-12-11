@@ -8,13 +8,38 @@ namespace MedikalSenter.Models
        
         public int ID { get; set; }
 
+        //summary property, derive a formal name
+        [Display(Name = "Doctor")]
+        public string FullName
+        {
+            get
+            {
+                return "Dr. " + FirstName
+                    + (string.IsNullOrEmpty(MiddleName) ? " " :
+                        (" " + (char?)MiddleName[0] + ". ").ToUpper())
+                    + LastName;
+            }
+        }
+
+        [Display(Name = "Doctor")]
+        public string FormalName
+        {
+            get
+            {
+                return LastName + ", " + FirstName
+                    + (string.IsNullOrEmpty(MiddleName) ? "" :
+                        (" " + (char?)MiddleName[0] + ".").ToUpper());
+            }
+        }
+
+
+
         [Display(Name = "First Name")]
         [Required(ErrorMessage ="dont leave first name blank")]
         [StringLength(50, ErrorMessage ="first name, not more than 50 char")]
         public string FirstName { get; set; }
 
         [Display(Name = "Middle Name")]
-        [Required(ErrorMessage = "dont leave middle name blank")]
         [StringLength(50, ErrorMessage = "middle name no more than 50 char")]
         public string MiddleName { get; set; }
 
@@ -23,6 +48,7 @@ namespace MedikalSenter.Models
         [StringLength(100, ErrorMessage = "last name, not more than 100 char")]
         public string LastName { get; set; }
 
+        //navigation property, constructed with hashset empty collection 
         public ICollection<Patient> Patients { get; set; } = new HashSet<Patient>();
 
     }

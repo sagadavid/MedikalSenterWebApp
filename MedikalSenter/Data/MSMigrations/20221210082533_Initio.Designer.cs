@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedikalSenter.Data.MSMigrations
 {
     [DbContext(typeof(MedikalSenterContext))]
-    [Migration("20221130235811_Initio")]
+    [Migration("20221210082533_Initio")]
     partial class Initio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,7 +36,6 @@ namespace MedikalSenter.Data.MSMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -76,7 +75,6 @@ namespace MedikalSenter.Data.MSMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 

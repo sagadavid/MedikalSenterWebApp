@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedikalSenter.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221201000628_Initio")]
+    [Migration("20221210082647_Initio")]
     partial class Initio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

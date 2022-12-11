@@ -16,7 +16,7 @@ namespace MedikalSenter.Data.MSMigrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -32,7 +32,7 @@ namespace MedikalSenter.Data.MSMigrations
                         .Annotation("Sqlite:Autoincrement", true),
                     OHIP = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     DOB = table.Column<DateTime>(type: "TEXT", nullable: true),
                     ExpYrVisits = table.Column<byte>(type: "INTEGER", nullable: false),
@@ -51,7 +51,6 @@ namespace MedikalSenter.Data.MSMigrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            //ix stands for secondary index
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_DoctorID",
                 table: "Patients",

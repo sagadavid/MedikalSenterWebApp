@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*David S' addition*/
+.form-group {
+margin-bottom:1rem
+}

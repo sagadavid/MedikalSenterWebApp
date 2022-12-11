@@ -1,8 +1,17 @@
-﻿Add-Migration -Context ApplicationDbContext -OutputDir Data\Migrations Initio
-Update-Database -Context ApplicationDbContext
+﻿install-package Microsoft.EntityFrameworkCore.Sqlite -v 6.0.10
+
+------------------------------------------------------------------
+update-database -context MedikalSenterContext -migration 0
+update-database -context ApplicationDbContext -migration 0
+
 -------------------------------------------------------------------------------
 Add-Migration -Context MedikalSenterContext -o Data\MSMigrations Initio
 Update-Database -Context MedikalSenterContext
 
+--------------------------------------------------------------------------------
+Add-Migration -Context ApplicationDbContext -o Data\Migrations Initio
+Update-Database -Context ApplicationDbContext
+
 Add to Migration for Triggers
 ExtraMigration.Steps(migrationBuilder);
+
