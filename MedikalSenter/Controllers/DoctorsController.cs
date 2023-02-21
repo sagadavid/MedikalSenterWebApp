@@ -22,7 +22,10 @@ namespace MedikalSenter.Controllers
         // GET: Doctors
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Doctors.ToListAsync());
+              return View(await _context.Doctors
+                  //lep//
+                  .AsNoTracking()
+                  .ToListAsync());
         }
 
         // GET: Doctors/Details/5
@@ -34,6 +37,8 @@ namespace MedikalSenter.Controllers
             }
 
             var doctor = await _context.Doctors
+                //lep//
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (doctor == null)
             {
@@ -56,12 +61,22 @@ namespace MedikalSenter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,FirstName,MiddleName,LastName")] Doctor doctor)
         {
+            //lep//try catch
+            try
+            {
             if (ModelState.IsValid)
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            }
+            catch (DbUpdateException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists see your system administrator.");
+            }
+
             return View(doctor);
         }
 
@@ -86,23 +101,36 @@ namespace MedikalSenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,MiddleName,LastName")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id)
+            //, [Bind("ID,FirstName,MiddleName,LastName")] Doctor doctor)
         {
-            if (id != doctor.ID)
+            //LEP//GO GET THE PATIENT TO UPDATE
+            var doctorToUpdate = await _context.Doctors
+                .SingleOrDefaultAsync(p => p.ID == id);
+                //.FirstOrDefaultAsync(p => p.ID == id);
+
+            if (doctorToUpdate == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (
+                //ModelState.IsValid
+                await TryUpdateModelAsync<Doctor>
+                (doctorToUpdate,
+                    "",
+                    d=>d.FirstName, d=>d.MiddleName,d=> d.LastName
+                    ))
             {
                 try
                 {
-                    _context.Update(doctor);
+                    //_context.Update(doctor);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DoctorExists(doctor.ID))
+                    if (!DoctorExists(doctorToUpdate.ID))
                     {
                         return NotFound();
                     }
@@ -111,9 +139,13 @@ namespace MedikalSenter.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
+                ;
             }
-            return View(doctor);
+            return View(doctorToUpdate);
         }
 
         // GET: Doctors/Delete/5
@@ -139,11 +171,14 @@ namespace MedikalSenter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            //lep//these concepts recurred and explained in patientscontroller in details
             if (_context.Doctors == null)
             {
                 return Problem("Entity set 'MedikalSenterContext.Doctors'  is null.");
             }
             var doctor = await _context.Doctors.FindAsync(id);
+            try
+            {
             if (doctor != null)
             {
                 _context.Doctors.Remove(doctor);
@@ -151,6 +186,22 @@ namespace MedikalSenter.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException dex)
+            {
+                if (dex.GetBaseException().Message.Contains("FOREIGN KEY constraint failed"))
+                {
+                    ModelState.AddModelError("", "Unable to Delete Doctor. " +
+                        "Remember, you cannot delete a Doctor that has patients assigned.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists see your system administrator.");
+                }
+            }
+            return View(doctor);
+
         }
 
         private bool DoctorExists(int id)

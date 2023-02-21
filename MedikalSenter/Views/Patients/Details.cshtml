@@ -58,6 +58,21 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.EMail)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PatientConditions)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach(var condi in Model.PatientConditions)
+            {
+                @condi.Condition.ConditionName <br />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MedicalTrial)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MedicalTrial.TrialName)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Doctor)
         </dt>

@@ -3,7 +3,8 @@ using System.Xml.Linq;
 
 namespace MedikalSenter.Models
 {
-    public class Patient
+    //LEP//TO GET MULTIPLE VALIDATION AVAILABLE INTERFACE IVALIDATEOBJECT USED
+    public class Patient:IValidatableObject
     {
         public int ID { get; set; }
 
@@ -43,6 +44,12 @@ namespace MedikalSenter.Models
             {
                 return "(" + Phone.Substring(0, 3) + ") " 
                     + Phone.Substring(3, 3) + "-" + Phone[6..];
+            }
+        }
+
+        public string InMedicalTrial {
+            get {
+                return MedicalTrialID.HasValue ? "Yes" : "No";
             }
         }
 
@@ -92,7 +99,29 @@ namespace MedikalSenter.Models
         //navigation prop
         public Doctor Doctor { get; set; }
 
+        [Display(Name = "Medical Trial")]
+        public int? MedicalTrialID { get; set; }
+        [Display(Name = "Medical Trial")]
+        public MedicalTrial MedicalTrial { get; set; }
 
+        [Display(Name = "History")]
+        public ICollection<PatientCondition> PatientConditions { get; set; } = new HashSet<PatientCondition>();
+
+        //LEP// VALIDATION CHECK WITH A NEW/RETRY POSSIBILITY 
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            //Create a string array containing the one element-the field where our error message should show up.
+            //then you pass this to the ValidaitonResult.
+            //This is only so the mesasge displays beside the field
+            //instead of just in the validaiton summary.
+            //var field = new[] { "DOB" };
+
+            if (DOB.GetValueOrDefault() > DateTime.Today)
+            {
+                //THIS IS A SERVER SIDE VALIDATION, SHOWS WHEN SAVED / OBJECT CREATED
+                yield return new ValidationResult("Date of Birth cannot be in the future.", new[] { "DOB" });
+            }
+        }
     }
 
 

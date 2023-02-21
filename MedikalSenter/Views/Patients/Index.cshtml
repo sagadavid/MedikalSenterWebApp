@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<MedikalSenter.Models.Patient>
-
+@*//lep//notice,
+modelItem is inumeralble, 
+model is parameter,
+item is local variable*@
 @{
     ViewData["Title"] = "Index";
 }
@@ -23,10 +26,14 @@
                 @Html.DisplayNameFor(model => model.ExpYrVisits)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                @*@Html.DisplayNameFor(model => model.Phone)*@
+                @Html.DisplayNameFor(model => model.MedicalTrial)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EMail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientConditions)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Doctor)
@@ -48,12 +55,21 @@
                 @Html.DisplayFor(modelItem => item.ExpYrVisits)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PhoneFormatted)
+                @*@Html.DisplayFor(modelItem => item.PhoneFormatted)*@
+                   @* @Html.DisplayFor(modelItem => item.MedicalTrial.TrialName)*@
+                    @Html.DisplayFor(modelItem => item.InMedicalTrial)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EMail)
             </td>
             <td>
+                @foreach (var condi in item.PatientConditions)
+                {
+                @condi.Condition.ConditionName<br />
+                }
+            </td>
+            <td>
+               
                 @Html.DisplayFor(modelItem => item.Doctor.FullName)
             </td>
             <td>

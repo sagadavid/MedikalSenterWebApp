@@ -11,18 +11,28 @@ namespace MedikalSenter.Data
         //entities are singular, collectiona are plural
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<PatientCondition> PatientConditions { get; set; }
+        public DbSet<Condition> Conditions { get; set; }
+        //medicaltrial was nullable, makes ondelete.restricted
+        public DbSet<MedicalTrial> MedicalTrials { get; set; }
+
+       
 
         //we do database work here while dbset is crated
         //fluent api to restrict/configure relations
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-            //schema helps things organized in proj..MO here, means MedikalSenter
+            //lep//schema helps things organized in proj..MO here, means MedikalSenter
             //created dbsets of this dbcontext will get this schema
             //but..sqlite doesnt support schemas
 
             //modelBuilder.HasDefaultSchema("MS");
 
-            //Fluent API from the Parent view..
+            //lep//many to many intersection
+            modelBuilder.Entity<PatientCondition>()
+                .HasKey(pc => new { pc.ConditionID, pc.PatientID });
+
+            //lep//Fluent API from the Parent view..
             //Prevent Cascade Delete from Doctor to Patient
             //meaning:we prevent deleting a Doctor with Patients assigned
             modelBuilder.Entity<Doctor>()
@@ -38,6 +48,14 @@ namespace MedikalSenter.Data
             modelBuilder.Entity<Patient>()
             .HasIndex(p => p.OHIP)
             .IsUnique();
+
+            //lep//m:m but delete restricted one side,
+            //lep//Allow Cascade Delete from Patient to PatientCondition
+            modelBuilder.Entity<PatientCondition>()
+                .HasOne<Condition>(pc => pc.Condition)
+                .WithMany(c => c.PatientConditions)
+                .HasForeignKey(pc => pc.ConditionID)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

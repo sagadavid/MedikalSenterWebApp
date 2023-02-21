@@ -4,11 +4,10 @@ namespace MedikalSenter.Models
 {
     public class Doctor
     {
-        //public Doctor(){ this.Patients = new HashSet<Patient>();}
        
         public int ID { get; set; }
 
-        //summary property, derive a formal name
+        //LEP//summary property, derive a formal name
         [Display(Name = "Doctor")]
         public string FullName
         {
@@ -48,8 +47,8 @@ namespace MedikalSenter.Models
         [StringLength(100, ErrorMessage = "last name, not more than 100 char")]
         public string LastName { get; set; }
 
-        //navigation property, constructed with hashset empty collection 
+        //LEP//navigation property, constructed with hashset empty collection 
         public ICollection<Patient> Patients { get; set; } = new HashSet<Patient>();
-
+        //public Doctor(){ this.Patients = new HashSet<Patient>();}
     }
 }

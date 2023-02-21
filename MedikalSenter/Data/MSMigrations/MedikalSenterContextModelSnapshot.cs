@@ -17,6 +17,22 @@ namespace MedikalSenter.Data.MSMigrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
+            modelBuilder.Entity("MedikalSenter.Models.Condition", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ConditionName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Conditions");
+                });
+
             modelBuilder.Entity("MedikalSenter.Models.Doctor", b =>
                 {
                     b.Property<int>("ID")
@@ -40,6 +56,22 @@ namespace MedikalSenter.Data.MSMigrations
                     b.HasKey("ID");
 
                     b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.MedicalTrial", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TrialName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("MedicalTrials");
                 });
 
             modelBuilder.Entity("MedikalSenter.Models.Patient", b =>
@@ -72,6 +104,9 @@ namespace MedikalSenter.Data.MSMigrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("MedicalTrialID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("MiddleName")
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
@@ -90,10 +125,27 @@ namespace MedikalSenter.Data.MSMigrations
 
                     b.HasIndex("DoctorID");
 
+                    b.HasIndex("MedicalTrialID");
+
                     b.HasIndex("OHIP")
                         .IsUnique();
 
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.PatientCondition", b =>
+                {
+                    b.Property<int>("ConditionID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PatientID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ConditionID", "PatientID");
+
+                    b.HasIndex("PatientID");
+
+                    b.ToTable("PatientConditions");
                 });
 
             modelBuilder.Entity("MedikalSenter.Models.Patient", b =>
@@ -104,12 +156,52 @@ namespace MedikalSenter.Data.MSMigrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MedikalSenter.Models.MedicalTrial", "MedicalTrial")
+                        .WithMany("Patients")
+                        .HasForeignKey("MedicalTrialID");
+
                     b.Navigation("Doctor");
+
+                    b.Navigation("MedicalTrial");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.PatientCondition", b =>
+                {
+                    b.HasOne("MedikalSenter.Models.Condition", "Condition")
+                        .WithMany("PatientConditions")
+                        .HasForeignKey("ConditionID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MedikalSenter.Models.Patient", "Patient")
+                        .WithMany("PatientConditions")
+                        .HasForeignKey("PatientID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Condition");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.Condition", b =>
+                {
+                    b.Navigation("PatientConditions");
                 });
 
             modelBuilder.Entity("MedikalSenter.Models.Doctor", b =>
                 {
                     b.Navigation("Patients");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.MedicalTrial", b =>
+                {
+                    b.Navigation("Patients");
+                });
+
+            modelBuilder.Entity("MedikalSenter.Models.Patient", b =>
+                {
+                    b.Navigation("PatientConditions");
                 });
 #pragma warning restore 612, 618
         }

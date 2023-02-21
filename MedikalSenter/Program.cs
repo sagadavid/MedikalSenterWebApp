@@ -39,8 +39,9 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
+//lep//debug/debug properties/appurl (change order, take http first)
+//lep//after that come and comment it out to enable kestrel service
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -53,7 +54,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-//a good start with builtin names/data
+//for a good start with builtin names/data
 MSInitializer.Seed(app);
 
+//lep//port 1025 is always empty to use, if a port is not avaliable, debug/properties/appurl 
 app.Run();
